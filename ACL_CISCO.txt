@@ -1,0 +1,36 @@
+
+
+
+object-group network Kaspi
+host 194.187.245.21
+host 194.187.245.15
+host 194.187.245.22
+host 216.239.32.29
+host 142.250.27.95
+host 194.187.245.12
+host 194.187.245.90
+
+
+
+ip dhcp pool For_Kaspi
+ network 10.7.129.0 255.255.255.0
+ dns-server 8.8.8.8 8.8.4.4 
+ default-router 10.7.129.1 
+ domain-name at.local
+ 
+ interface Vlan7
+ description Kaspi_Net
+ ip address 10.7.129.1 255.255.255.0
+ ip access-group For_Kaspi_ACL in
+ ip nat inside
+
+
+ip access-list extended For_Kaspi_ACL
+ permit udp any eq bootpc any eq bootps
+ permit ip host 10.7.129.1 any
+ deny   ip 10.7.129.0 0.0.0.255 192.168.0.0 0.0.255.255
+ deny   ip 10.7.129.0 0.0.0.255 10.0.0.0 0.255.255.255
+ deny   ip 10.7.129.0 0.0.0.255 172.0.0.0 0.240.255.255
+ permit ip 10.7.129.0 0.0.0.255 any
+
+45 permit ip 10.7.129.0 0.0.0.255 object-group Kaspi
